@@ -72,8 +72,6 @@ function browseDir(){
 
 				wikiDir=${wikiDir/".$extension"/'.md'}
 
-				touch $path/$wikiDir
-
 				case $extension in
 					sh )
 						./reader/shellReader.sh $element > $path/$wikiDir
@@ -85,7 +83,7 @@ function browseDir(){
 						./reader/javaReader.sh $element > $path/$wikiDir
 						;;
 					c | h )
-						./reader/cReader.sh $element > $path/$wikiDir
+						./reader/cReader.sh $element > $path/${wikiDir/".md"/'-'$extension'.md'}
 						;;
 					js)
 						;;
