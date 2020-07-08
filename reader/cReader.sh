@@ -37,9 +37,13 @@
 waitingFileDescription="FALSE"
 waitingAuthors="FALSE"
 waitingIncludes="FALSE"
-waitingDeclaration="FALSE"
 waitingFunctions="FALSE"
 statusBodyFunction="FINISHED"
+functionDescription=""
+checkDescription="FALSE"
+checkInput="FALSE"
+checkOutput="FALSE"
+checkAuthors="FALSE"
 
 #--------------------------------------------------------------------------------#
 
@@ -63,11 +67,25 @@ reset(){
 	waitingFileDescription="FALSE"
 	waitingAuthors="FALSE"
 	waitingIncludes="FALSE"
-	waitingDeclaration="FALSE"
 	waitingFunctions="FALSE"
 	statusBodyFunction="FINISHED"
+	resetFunctionDescription
+	# echo reset
 }
 
+resetFunctionDescription(){
+
+	functionDescription=""
+	checkDescription="FALSE"
+	checkInput="FALSE"
+	checkOutput="FALSE"
+	checkAuthors="FALSE"
+
+}
+
+addDescription(){
+	functionDescription="$functionDescription""$1"
+}
 
 #--------------------------------------------------------------------------------#
 
@@ -121,26 +139,6 @@ while read line; do
 		elif [[ $waitingAuthors == "TRUE" ]]; then
 			echo -e "* ${line//'// '/''}"
 
-		# Waiting for Function description
-		elif [[ $statusBodyFunction == "WAITING_END" ]]; then
-			param=${line//'# '/''}
-			case ${param%% *} in
-				"Description" )
-					echo -e "\n*Description :* "
-					echo -e "$param\n" | cut -d: -f2
-					;;
-				"Input" )
-					echo -e "\n*Input :*\n"
-					;;
-				"Output" )
-					echo -e "\n*Output :*\n"
-					;;
-				"Authors" )
-					echo -e "\n*Authors :*\n"
-					;;
-				*)
-					echo -e "$param";;
-			esac
 		fi
 
 	# End of paragraph
@@ -165,22 +163,67 @@ while read line; do
 			fi
 		fi
 
-
+	
 	# Reading a Function
-	elif [[ $line == *"(""){" ]]; then
-		statusBodyFunction="WAITING_BEGIN"
-		echo -e "### **"${line//'(){'/''}"**"
+	elif [[ $line == *"("*")"* && $waitingFunctions == "TRUE" ]]; then
+		resetFunctionDescription
+		statusBodyFunction="WAITING_BODY"
 
-	# Reading Function Documentation
-	elif [[ $line == "###"* ]]; then
-		if [[ $statusBodyFunction == "FINISHED" ]]; then
-			statusBodyFunction="WAITING_BEGIN"
-		elif [[ $statusBodyFunction == "WAITING_BEGIN" ]]; then
-			statusBodyFunction="WAITING_END"
-		elif [[ $statusBodyFunction == "WAITING_END" ]]; then
-			statusBodyFunction="FINISHED"
-			echo -e "___"
-		fi
+		functionName=$(echo $line | cut -d'(' -f1 | rev | cut -d' ' -f1 | rev )
+
+
+		addDescription "### **$functionName**"
+
+	elif [[ $statusBodyFunction == "WAITING_BODY" ]]; then
+
+			if [[ $line == '*/' ]]; then
+				if [[ $checkDescription == "TRUE" && $checkInput == "TRUE" && $checkOutput == "TRUE" && $checkAuthors == "TRUE" ]]; then
+					echo -e "$functionDescription\n\n"
+				fi
+				statusBodyFunction="FINISHED"
+				resetFunctionDescription
+			else
+				param=${line//'* '/''}
+				case ${param%% *} in
+					"Description" )
+						checkDescription="TRUE"
+						addDescription "\n\n*Description :* "
+						addDescription "$(echo -e "$param\n" | cut -d: -f2)"
+						;;
+					"Input" )
+						checkInput="TRUE"
+						addDescription "\n\n*Input :*\n"
+						;;
+					"Output" )
+						checkOutput="TRUE"
+						addDescription "\n\n*Output :*\n"
+						;;
+					"Authors" )
+						checkAuthors="TRUE"
+						addDescription "\n\n*Authors :*\n"
+						;;
+					"/**" | "*")
+						# nothing
+						;;
+					*)
+						addDescription "$param";;
+				esac
+			fi
+
+	# else
+	# 	echo "$line"
+
+
+	# # Reading Function Documentation
+	# elif [[ $line == "###"* ]]; then
+	# 	if [[ $statusBodyFunction == "FINISHED" ]]; then
+	# 		statusBodyFunction="WAITING_BEGIN"
+	# 	elif [[ $statusBodyFunction == "WAITING_BEGIN" ]]; then
+	# 		statusBodyFunction="WAITING_END"
+	# 	elif [[ $statusBodyFunction == "WAITING_END" ]]; then
+	# 		statusBodyFunction="FINISHED"
+	# 		echo -e "___"
+	# 	fi
 
 	fi
 

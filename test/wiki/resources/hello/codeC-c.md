@@ -1,4 +1,4 @@
-# **Wiki -- [codeC.c](/test//resources/hello/codeC.c)**
+# **Wiki -- [codeC.c](/test/resources/hello/codeC.c)**
 
 
 ## **Description**
@@ -16,4 +16,32 @@ Empty description
 
 ---
 ## **Functions**
+
+### **toto**
+
+*Description :*  none
+
+*Input :*
+- int nb
+
+*Output :*
+- none
+
+*Authors :*
+- Sébastien HERT
+
+
+### **tata**
+
+*Description :*  none
+
+*Input :*
+- int nb
+
+*Output :*
+- none
+
+*Authors :*
+- Sébastien HERT
+
 

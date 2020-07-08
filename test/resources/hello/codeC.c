@@ -63,7 +63,39 @@ int main(int argc, char const *argv[])
 //---------------------------------- Functions -----------------------------------//
 
 void toto(int nb){
+	/**
+	 * Description : none
+	 *
+	 * Input :
+	 * - int nb
+	 *
+	 * Output :
+	 * - none
+	 *
+	 * Authors :
+	 * - Sébastien HERT
+	 */
 	printf("ok");
+	/**
+	 * Description : none
+	 */
+}
+
+void tata(int nb){
+	/**
+	 * Description : none
+	 *
+	 * Input :
+	 * - int nb
+	 *
+	 * Output :
+	 * - none
+	 *
+	 * Authors :
+	 * - Sébastien HERT
+	 */
+	printf("ok");
+
 }
 
 //--------------------------------------------------------------------------------//

@@ -1,4 +1,4 @@
-# **Wiki -- [codeC.h](/test//resources/hello/codeC.h)**
+# **Wiki -- [codeC.h](/test/resources/hello/codeC.h)**
 
 
 ## **Description**
